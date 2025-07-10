@@ -4,35 +4,30 @@ declare(strict_types=1);
 
 namespace Moox\Data\Filament\Resources;
 
-use Moox\Data\Models\StaticLanguage;
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Grid;
-use Filament\Schemas\Components\Section;
-use Moox\Data\Filament\Resources\StaticLanguageResource\Pages\ListStaticLanguages;
-use Moox\Data\Filament\Resources\StaticLanguageResource\Pages\CreateStaticLanguage;
-use Moox\Data\Filament\Resources\StaticLanguageResource\Pages\EditStaticLanguage;
-use Moox\Data\Filament\Resources\StaticLanguageResource\Pages\ViewStaticLanguage;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Resource;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Moox\Core\Traits\Base\BaseInResource;
-use Moox\Core\Traits\Simple\SingleSimpleInResource;
-use Moox\Data\Filament\Resources\StaticLanguageResource\Pages;
+use Moox\Core\Entities\Items\Draft\BaseDraftResource;
+use Moox\Data\Filament\Resources\StaticLanguageResource\Pages\CreateStaticLanguage;
+use Moox\Data\Filament\Resources\StaticLanguageResource\Pages\EditStaticLanguage;
+use Moox\Data\Filament\Resources\StaticLanguageResource\Pages\ListStaticLanguages;
+use Moox\Data\Filament\Resources\StaticLanguageResource\Pages\ViewStaticLanguage;
 use Moox\Data\Filament\Resources\StaticLanguageResource\RelationManagers\StaticLocalesRelationManager;
+use Moox\Data\Models\StaticLanguage;
 
-class StaticLanguageResource extends Resource
+class StaticLanguageResource extends BaseDraftResource
 {
-    use BaseInResource, SingleSimpleInResource;
-
     protected static ?string $model = StaticLanguage::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'gmdi-language';
+    protected static string|\BackedEnum|null $navigationIcon = 'gmdi-language';
 
     public static function getModelLabel(): string
     {
@@ -61,57 +56,57 @@ class StaticLanguageResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return $schema->components([
-            Grid::make(2)
-                ->schema([
-                    Grid::make()
-                        ->schema([
-                            Section::make()
-                                ->schema([
-                                    TextInput::make('alpha2')
-                                        ->label(__('data::fields.alpha2'))
-                                        ->maxLength(255)->required(),
-                                    TextInput::make('alpha3_b')
-                                        ->label(__('data::fields.alpha3_b'))
-                                        ->maxLength(255)->nullable(),
-                                    TextInput::make('alpha3_t')
-                                        ->label(__('data::fields.alpha3_t'))
-                                        ->maxLength(255)->nullable(),
-                                    TextInput::make('common_name')
-                                        ->label(__('data::fields.common_name'))
-                                        ->maxLength(255)->required(),
-                                    TextInput::make('native_name')
-                                        ->label(__('data::fields.native_name'))
-                                        ->maxLength(255)->nullable(),
-                                    KeyValue::make('exonyms')->label(__('data::fields.exonyms')),
-                                ]),
-                        ])
-                        ->columnSpan(['lg' => 2]),
-                    Grid::make()
-                        ->schema([
-                            Section::make()
-                                ->schema([
-                                    static::getFormActions(),
-                                ]),
-                            Section::make('')
-                                ->schema([
-                                    Select::make('script')
-                                        ->label(__('data::fields.script'))
-                                        ->options(__('data::enums/language-script'))
-                                        ->required(),
-                                ]),
-                            Section::make('')
-                                ->schema([
-                                    Select::make('direction')
-                                        ->label(__('data::fields.direction'))
-                                        ->options(__('data::enums/language-direction'))
-                                        ->required(),
-                                ]),
-                        ])
-                        ->columnSpan(['lg' => 1]),
-                ])
-                ->columns(['lg' => 3]),
-        ]);
+        return $schema
+            ->schema([
+                Grid::make()
+                    ->schema([
+                        Section::make()
+                            ->schema([
+                                TextInput::make('alpha2')
+                                    ->label(__('data::fields.alpha2'))
+                                    ->maxLength(255)->required(),
+                                TextInput::make('alpha3_b')
+                                    ->label(__('data::fields.alpha3_b'))
+                                    ->maxLength(255)->nullable(),
+                                TextInput::make('alpha3_t')
+                                    ->label(__('data::fields.alpha3_t'))
+                                    ->maxLength(255)->nullable(),
+                                TextInput::make('common_name')
+                                    ->label(__('data::fields.common_name'))
+                                    ->maxLength(255)->required(),
+                                TextInput::make('native_name')
+                                    ->label(__('data::fields.native_name'))
+                                    ->maxLength(255)->nullable(),
+                                KeyValue::make('exonyms')->label(__('data::fields.exonyms')),
+                            ])
+                            ->columnSpan(2),
+                        Grid::make()
+                            ->schema([
+                                Section::make()
+                                    ->schema([
+                                        static::getFormActions(),
+                                    ]),
+                                Section::make('')
+                                    ->schema([
+                                        Select::make('script')
+                                            ->label(__('data::fields.script'))
+                                            ->options(__('data::enums/language-script'))
+                                            ->required(),
+                                    ]),
+                                Section::make('')
+                                    ->schema([
+                                        Select::make('direction')
+                                            ->label(__('data::fields.direction'))
+                                            ->options(__('data::enums/language-direction'))
+                                            ->required(),
+                                    ]),
+                            ])
+                            ->columns(1)
+                            ->columnSpan(1),
+                    ])
+                    ->columns(3)
+                    ->columnSpanFull(),
+            ]);
     }
 
     public static function table(Table $table): Table

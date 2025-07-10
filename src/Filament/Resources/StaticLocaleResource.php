@@ -4,36 +4,30 @@ declare(strict_types=1);
 
 namespace Moox\Data\Filament\Resources;
 
-use Moox\Data\Models\StaticLocale;
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Grid;
-use Filament\Schemas\Components\Section;
-use Moox\Data\Filament\Resources\StaticLocaleResource\Pages\ListStaticLocales;
-use Moox\Data\Filament\Resources\StaticLocaleResource\Pages\CreateStaticLocale;
-use Moox\Data\Filament\Resources\StaticLocaleResource\Pages\EditStaticLocale;
-use Moox\Data\Filament\Resources\StaticLocaleResource\Pages\ViewStaticLocale;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Resources\Resource;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Moox\Core\Traits\Base\BaseInResource;
-use Moox\Core\Traits\Simple\SingleSimpleInResource;
-use Moox\Core\Traits\Tabs\HasResourceTabs;
-use Moox\Data\Filament\Resources\StaticLocaleResource\Pages;
+use Moox\Core\Entities\Items\Draft\BaseDraftResource;
+use Moox\Data\Filament\Resources\StaticLocaleResource\Pages\CreateStaticLocale;
+use Moox\Data\Filament\Resources\StaticLocaleResource\Pages\EditStaticLocale;
+use Moox\Data\Filament\Resources\StaticLocaleResource\Pages\ListStaticLocales;
+use Moox\Data\Filament\Resources\StaticLocaleResource\Pages\ViewStaticLocale;
+use Moox\Data\Models\StaticLocale;
 
-class StaticLocaleResource extends Resource
+class StaticLocaleResource extends BaseDraftResource
 {
-    use BaseInResource, HasResourceTabs, SingleSimpleInResource;
-
     protected static ?string $model = StaticLocale::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'gmdi-fmd-good-s';
+    protected static string|\BackedEnum|null $navigationIcon = 'gmdi-fmd-good-s';
 
     public static function getModelLabel(): string
     {
@@ -62,47 +56,50 @@ class StaticLocaleResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return $schema->components([
-            Grid::make(2)
-                ->schema([
-                    Grid::make()
-                        ->schema([
-                            Section::make()
-                                ->schema([
-                                    Select::make('language_id')
-                                        ->label(__('data::fields.language'))
-                                        ->relationship('language', 'common_name')
-                                        ->searchable()
-                                        ->preload()->required(),
-                                    Select::make('country_id')
-                                        ->label(__('data::fields.country'))
-                                        ->relationship('country', 'common_name')
-                                        ->searchable()
-                                        ->preload()->required(),
-                                    Toggle::make('is_official_language')
-                                        ->label(__('data::fields.is_official_language'))
-                                        ->default(false),
-                                    TextInput::make('locale')
-                                        ->label(__('data::fields.locale'))
-                                        ->maxLength(255)->required(),
-                                    TextInput::make('name')
-                                        ->label(__('data::fields.name'))
-                                        ->maxLength(255)->required(),
-
-                                ]),
-                        ])
-                        ->columnSpan(['lg' => 2]),
-                    Grid::make()
-                        ->schema([
-                            Section::make()
-                                ->schema([
-                                    static::getFormActions(),
-                                ]),
-                        ])
-                        ->columnSpan(['lg' => 1]),
-                ])
-                ->columns(['lg' => 3]),
-        ]);
+        return $schema
+            ->schema([
+                Grid::make()
+                    ->schema([
+                        Section::make()
+                            ->schema([
+                                Select::make('language_id')
+                                    ->label(__('data::fields.language'))
+                                    ->relationship('language', 'common_name')
+                                    ->searchable()
+                                    ->preload()
+                                    ->required(),
+                                Select::make('country_id')
+                                    ->label(__('data::fields.country'))
+                                    ->relationship('country', 'common_name')
+                                    ->searchable()
+                                    ->preload()
+                                    ->required(),
+                                Toggle::make('is_official_language')
+                                    ->label(__('data::fields.is_official_language'))
+                                    ->default(false),
+                                TextInput::make('locale')
+                                    ->label(__('data::fields.locale'))
+                                    ->maxLength(255)
+                                    ->required(),
+                                TextInput::make('name')
+                                    ->label(__('data::fields.name'))
+                                    ->maxLength(255)
+                                    ->required(),
+                            ])
+                            ->columnSpan(2),
+                        Grid::make()
+                            ->schema([
+                                Section::make()
+                                    ->schema([
+                                        static::getFormActions(),
+                                    ]),
+                            ])
+                            ->columns(1)
+                            ->columnSpan(1),
+                    ])
+                    ->columns(3)
+                    ->columnSpanFull(),
+            ]);
     }
 
     public static function table(Table $table): Table
