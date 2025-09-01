@@ -7,7 +7,6 @@ namespace Moox\Data\Filament\Resources;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Resources\Resource;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -17,8 +16,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Moox\Core\Traits\Base\BaseInResource;
-use Moox\Core\Traits\Simple\SingleSimpleInResource;
+use Moox\Core\Entities\Items\Record\BaseRecordResource;
 use Moox\Core\Traits\Tabs\HasResourceTabs;
 use Moox\Data\Filament\Resources\StaticCountriesStaticCurrenciesResource\Pages\CreateStaticCountriesStaticCurrencies;
 use Moox\Data\Filament\Resources\StaticCountriesStaticCurrenciesResource\Pages\EditStaticCountriesStaticCurrencies;
@@ -26,9 +24,9 @@ use Moox\Data\Filament\Resources\StaticCountriesStaticCurrenciesResource\Pages\L
 use Moox\Data\Filament\Resources\StaticCountriesStaticCurrenciesResource\Pages\ViewStaticCountriesStaticCurrencies;
 use Moox\Data\Models\StaticCountriesStaticCurrencies;
 
-class StaticCountriesStaticCurrenciesResource extends Resource
+class StaticCountriesStaticCurrenciesResource extends BaseRecordResource
 {
-    use BaseInResource, HasResourceTabs, SingleSimpleInResource;
+    use HasResourceTabs;
 
     protected static ?string $model = StaticCountriesStaticCurrencies::class;
 

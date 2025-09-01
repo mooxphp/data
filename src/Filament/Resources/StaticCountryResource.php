@@ -13,7 +13,7 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Moox\Core\Entities\Items\Draft\BaseDraftResource;
+use Moox\Core\Entities\Items\Record\BaseRecordResource;
 use Moox\Data\Filament\Resources\StaticCountryResource\Pages\CreateStaticCountry;
 use Moox\Data\Filament\Resources\StaticCountryResource\Pages\EditStaticCountry;
 use Moox\Data\Filament\Resources\StaticCountryResource\Pages\ListStaticCountries;
@@ -23,7 +23,7 @@ use Moox\Data\Filament\Resources\StaticCountryResource\RelationManagers\StaticCu
 use Moox\Data\Filament\Resources\StaticCountryResource\RelationManagers\StaticTimezoneRealtionManager;
 use Moox\Data\Models\StaticCountry;
 
-class StaticCountryResource extends BaseDraftResource
+class StaticCountryResource extends BaseRecordResource
 {
     protected static ?string $model = StaticCountry::class;
 

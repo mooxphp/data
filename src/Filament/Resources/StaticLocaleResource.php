@@ -16,14 +16,14 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Moox\Core\Entities\Items\Draft\BaseDraftResource;
+use Moox\Core\Entities\Items\Record\BaseRecordResource;
 use Moox\Data\Filament\Resources\StaticLocaleResource\Pages\CreateStaticLocale;
 use Moox\Data\Filament\Resources\StaticLocaleResource\Pages\EditStaticLocale;
 use Moox\Data\Filament\Resources\StaticLocaleResource\Pages\ListStaticLocales;
 use Moox\Data\Filament\Resources\StaticLocaleResource\Pages\ViewStaticLocale;
 use Moox\Data\Models\StaticLocale;
 
-class StaticLocaleResource extends BaseDraftResource
+class StaticLocaleResource extends BaseRecordResource
 {
     protected static ?string $model = StaticLocale::class;
 

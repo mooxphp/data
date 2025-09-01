@@ -13,7 +13,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Moox\Core\Entities\Items\Draft\BaseDraftResource;
+use Moox\Core\Entities\Items\Record\BaseRecordResource;
 use Moox\Data\Filament\Resources\StaticCurrencyResource\Pages\CreateStaticCurrency;
 use Moox\Data\Filament\Resources\StaticCurrencyResource\Pages\EditStaticCurrency;
 use Moox\Data\Filament\Resources\StaticCurrencyResource\Pages\ListStaticCurrencies;
@@ -21,7 +21,7 @@ use Moox\Data\Filament\Resources\StaticCurrencyResource\Pages\ViewStaticCurrency
 use Moox\Data\Filament\Resources\StaticCurrencyResource\RelationManagers\StaticCountryRelationManager;
 use Moox\Data\Models\StaticCurrency;
 
-class StaticCurrencyResource extends BaseDraftResource
+class StaticCurrencyResource extends BaseRecordResource
 {
     protected static ?string $model = StaticCurrency::class;
 

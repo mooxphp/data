@@ -15,7 +15,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Moox\Core\Entities\Items\Draft\BaseDraftResource;
+use Moox\Core\Entities\Items\Record\BaseRecordResource;
 use Moox\Data\Filament\Resources\StaticLanguageResource\Pages\CreateStaticLanguage;
 use Moox\Data\Filament\Resources\StaticLanguageResource\Pages\EditStaticLanguage;
 use Moox\Data\Filament\Resources\StaticLanguageResource\Pages\ListStaticLanguages;
@@ -23,7 +23,7 @@ use Moox\Data\Filament\Resources\StaticLanguageResource\Pages\ViewStaticLanguage
 use Moox\Data\Filament\Resources\StaticLanguageResource\RelationManagers\StaticLocalesRelationManager;
 use Moox\Data\Models\StaticLanguage;
 
-class StaticLanguageResource extends BaseDraftResource
+class StaticLanguageResource extends BaseRecordResource
 {
     protected static ?string $model = StaticLanguage::class;
 

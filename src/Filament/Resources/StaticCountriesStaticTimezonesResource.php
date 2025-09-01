@@ -5,25 +5,21 @@ declare(strict_types=1);
 namespace Moox\Data\Filament\Resources;
 
 use Filament\Forms\Components\Select;
-use Filament\Resources\Resource;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Moox\Core\Traits\Base\BaseInResource;
-use Moox\Core\Traits\Simple\SingleSimpleInResource;
+use Moox\Core\Entities\Items\Record\BaseRecordResource;
 use Moox\Data\Filament\Resources\StaticCountriesStaticTimezonesResource\Pages\CreateStaticCountriesStaticTimezones;
 use Moox\Data\Filament\Resources\StaticCountriesStaticTimezonesResource\Pages\EditStaticCountriesStaticTimezones;
 use Moox\Data\Filament\Resources\StaticCountriesStaticTimezonesResource\Pages\ListStaticCountriesStaticTimezones;
 use Moox\Data\Filament\Resources\StaticCountriesStaticTimezonesResource\Pages\ViewStaticCountriesStaticTimezones;
 use Moox\Data\Models\StaticCountriesStaticTimezones;
 
-class StaticCountriesStaticTimezonesResource extends Resource
+class StaticCountriesStaticTimezonesResource extends BaseRecordResource
 {
-    use BaseInResource, SingleSimpleInResource;
-
     protected static ?string $model = StaticCountriesStaticTimezones::class;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';

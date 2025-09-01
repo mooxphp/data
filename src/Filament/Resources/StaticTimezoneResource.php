@@ -15,7 +15,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Moox\Core\Entities\Items\Draft\BaseDraftResource;
+use Moox\Core\Entities\Items\Record\BaseRecordResource;
 use Moox\Data\Filament\Resources\StaticTimezoneResource\Pages\CreateStaticTimezone;
 use Moox\Data\Filament\Resources\StaticTimezoneResource\Pages\EditStaticTimezone;
 use Moox\Data\Filament\Resources\StaticTimezoneResource\Pages\ListStaticTimezones;
@@ -23,7 +23,7 @@ use Moox\Data\Filament\Resources\StaticTimezoneResource\Pages\ViewStaticTimezone
 use Moox\Data\Filament\Resources\StaticTimezoneResource\RelationManagers\StaticCountriesRelationManager;
 use Moox\Data\Models\StaticTimezone;
 
-class StaticTimezoneResource extends BaseDraftResource
+class StaticTimezoneResource extends BaseRecordResource
 {
     protected static ?string $model = StaticTimezone::class;
 
