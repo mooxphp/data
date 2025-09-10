@@ -107,20 +107,27 @@ class StaticLocaleResource extends BaseRecordResource
         return $table
             ->columns([
                 TextColumn::make('locale')
-                    ->label(__('data::fields.locale'))->sortable()->searchable(),
-                TextColumn::make('name')->label(__('data::fields.name'))->sortable()->searchable()->toggleable(),
+                    ->label(__('data::fields.locale'))
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('name')->label(__('data::fields.name'))
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
                 IconColumn::make('language_flag_icon')
-                    ->label('')
+                    ->label('Language')
                     ->icon(fn (string $state): string => $state),
                 TextColumn::make('language.common_name')
                     ->label(__('data::fields.common_language_name'))
-                    ->sortable()->searchable(),
+                    ->sortable()
+                    ->searchable(),
                 IconColumn::make('country_flag_icon')
                     ->label('')
                     ->icon(fn (string $state): string => $state),
                 TextColumn::make('country.common_name')
                     ->label(__('data::fields.common_country_name'))
-                    ->sortable()->searchable(),
+                    ->sortable()
+                    ->searchable(),
                 IconColumn::make('is_official_language')
                     ->label(__('data::fields.is_official_language'))
                     ->boolean(),
@@ -226,11 +233,14 @@ class StaticLocaleResource extends BaseRecordResource
                     }),
                 SelectFilter::make('language')
                     ->label(__('data::fields.language'))
-                    ->relationship('language', 'common_name'),
+                    ->relationship('language', 'common_name')
+                    ->searchable(),
                 SelectFilter::make('country')
                     ->label(__('data::fields.country'))
-                    ->relationship('country', 'common_name'),
-            ]);
+                    ->relationship('country', 'common_name')
+                    ->searchable(),
+            ])
+            ->deferFilters(false);
     }
 
     public static function getPages(): array
@@ -241,5 +251,10 @@ class StaticLocaleResource extends BaseRecordResource
             'edit' => EditStaticLocale::route('/{record}/edit'),
             'view' => ViewStaticLocale::route('/{record}'),
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return (string) static::getModel()::count();
     }
 }

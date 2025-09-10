@@ -169,4 +169,9 @@ class StaticTimezoneResource extends BaseRecordResource
             'view' => ViewStaticTimezone::route('/{record}'),
         ];
     }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return (string) static::getModel()::count();
+    }
 }

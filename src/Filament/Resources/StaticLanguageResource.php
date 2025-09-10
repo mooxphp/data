@@ -114,15 +114,19 @@ class StaticLanguageResource extends BaseRecordResource
         return $table
             ->columns([
                 TextColumn::make('alpha2')
-                    ->label(__('data::fields.alpha2')),
+                    ->label(__('data::fields.alpha2'))
+                    ->searchable(),
                 TextColumn::make('alpha3_b')
                     ->label(__('data::fields.alpha3_b')),
                 TextColumn::make('alpha3_t')
                     ->label(__('data::fields.alpha3_t')),
                 TextColumn::make('common_name')
-                    ->label(__('data::fields.common_name')),
+                    ->label(__('data::fields.common_name'))
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('native_name')
-                    ->label(__('data::fields.native_name')),
+                    ->label(__('data::fields.native_name'))
+                    ->searchable(),
                 TextColumn::make('script')->sortable()->searchable()->toggleable()
                     ->label(__('data::fields.script')),
                 TextColumn::make('direction')->sortable()->searchable()->toggleable()
@@ -251,5 +255,10 @@ class StaticLanguageResource extends BaseRecordResource
             'edit' => EditStaticLanguage::route('/{record}/edit'),
             'view' => ViewStaticLanguage::route('/{record}'),
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return (string) static::getModel()::count();
     }
 }

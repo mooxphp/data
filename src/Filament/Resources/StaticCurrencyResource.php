@@ -216,4 +216,9 @@ class StaticCurrencyResource extends BaseRecordResource
             'view' => ViewStaticCurrency::route('/{record}'),
         ];
     }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return (string) static::getModel()::count();
+    }
 }

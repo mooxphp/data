@@ -187,4 +187,9 @@ class StaticCountriesStaticCurrenciesResource extends BaseRecordResource
             'view' => ViewStaticCountriesStaticCurrencies::route('/{record}'),
         ];
     }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return (string) static::getModel()::count();
+    }
 }
