@@ -191,7 +191,6 @@ class StaticLanguage extends Model
     public function getDisplayNameAttribute(): string
     {
         $useNativeNames = config('localization.language_selector.use_native_names', true);
-        $fallbackToEnglish = config('localization.language_selector.fallback_to_english', true);
 
         if (! $useNativeNames) {
             return $this->common_name;
@@ -201,10 +200,6 @@ class StaticLanguage extends Model
             return $this->native_name;
         }
 
-        if ($fallbackToEnglish) {
-            return $this->common_name;
-        }
-
-        return $this->alpha2;
+        return $this->common_name;
     }
 }

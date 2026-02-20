@@ -62,7 +62,6 @@ class ImportStaticDataJob implements ShouldQueue
             'glg' => 'gl', // Galician
             'glv' => 'gv', // Manx
             'grn' => 'gn', // Guarani
-            'gsw' => 'de', // Swiss German (maps to German)
             'hat' => 'ht', // Haitian Creole
             'heb' => 'he', // Hebrew
             'her' => 'hz', // Herero
@@ -189,6 +188,12 @@ class ImportStaticDataJob implements ShouldQueue
             'zul' => 'zu', // Zulu
         ];
 
+        // Variant language codes to skip during import
+        // These are regional variants/creoles that aren't needed
+        $skipVariantCodes = [
+            'gsw',  // Swiss German -> skip, not needed
+        ];
+
         try {
             Log::channel('daily')->info('Attempting to fetch data from REST Countries API with multiple calls...');
 
@@ -204,9 +209,9 @@ class ImportStaticDataJob implements ShouldQueue
                 return;
             }
 
-            // Second call: Additional country info
+            // Second call: Additional country info including translations
             $response2 = Http::timeout(60)->get('https://restcountries.com/v3.1/all', [
-                'fields' => 'cca2,idd,tld,regionalBlocs,postalCode,languages,timezones',
+                'fields' => 'cca2,idd,tld,regionalBlocs,postalCode,languages,timezones,translations',
             ]);
 
             if ($response2->failed()) {
@@ -232,7 +237,7 @@ class ImportStaticDataJob implements ShouldQueue
                 }
             }
 
-            Log::channel('daily')->info('Fetched and merged '.count($countries).' countries from API');
+            Log::channel('daily')->info('Fetched and merged '.count($countries).' countries from REST Countries API');
 
             // Fetch native names from ApiCountries API
             Log::channel('daily')->info('Fetching native names from ApiCountries API...');
@@ -242,10 +247,13 @@ class ImportStaticDataJob implements ShouldQueue
             if ($apiCountriesResponse->successful()) {
                 $apiCountries = $apiCountriesResponse->json();
                 foreach ($apiCountries as $country) {
-                    if (isset($country['alpha2Code']) && isset($country['languages'])) {
-                        foreach ($country['languages'] as $lang) {
-                            if (isset($lang['iso639_1']) && isset($lang['nativeName'])) {
-                                $nativeNamesMap[$lang['iso639_1']] = $lang['nativeName'];
+                    if (isset($country['alpha2Code'])) {
+                        // Collect language native names
+                        if (isset($country['languages'])) {
+                            foreach ($country['languages'] as $lang) {
+                                if (isset($lang['iso639_1']) && isset($lang['nativeName'])) {
+                                    $nativeNamesMap[$lang['iso639_1']] = $lang['nativeName'];
+                                }
                             }
                         }
                     }
@@ -267,6 +275,7 @@ class ImportStaticDataJob implements ShouldQueue
 
                     $subregion = $countryData['subregion'] ?? null;
                     $nativeName = $countryData['name']['nativeName'] ?? [];
+                    $translations = $countryData['translations'] ?? [];
 
                     $country = StaticCountry::updateOrCreate(
                         ['alpha2' => $countryData['cca2']],
@@ -274,7 +283,8 @@ class ImportStaticDataJob implements ShouldQueue
                             'alpha3_b' => $countryData['cca3'] ?? null,
                             'common_name' => $countryData['name']['common'] ?? null,
                             'native_name' => $nativeName,
-                            'exonyms' => $countryData['translations'] ?? [],
+                            'exonyms' => $countryData['altSpellings'] ?? [],
+                            'translations' => $translations,
                             'region' => $countryData['region'] ?? null,
                             'subregion' => $subregion,
                             'calling_code' => ! empty($countryData['idd']['root']) ? $countryData['idd']['root'] : null,
@@ -316,18 +326,26 @@ class ImportStaticDataJob implements ShouldQueue
                     if (! empty($countryData['languages'])) {
                         foreach ($countryData['languages'] as $code => $name) {
                             try {
+                                // Skip variant codes that aren't needed
+                                if (in_array($code, $skipVariantCodes)) {
+                                    Log::channel('daily')->info("Skipping variant language {$code} ({$name}) for country {$country->alpha2}");
+
+                                    continue;
+                                }
+
                                 $alpha2 = $alpha3ToAlpha2[$code] ?? $code;
                                 $nativeName = $nativeNamesMap[$alpha2] ?? $name;
 
                                 $language = StaticLanguage::updateOrCreate(
                                     ['alpha2' => $alpha2],
                                     [
+                                        'alpha3_b' => $code,
                                         'common_name' => $name,
                                         'native_name' => $nativeName,
                                     ]
                                 );
 
-                                $locale = $alpha2.'_'.strtolower($country->alpha2);
+                                $locale = $alpha2.'_'.strtoupper($country->alpha2);
                                 StaticLocale::updateOrCreate(
                                     [
                                         'country_id' => $country->id,
